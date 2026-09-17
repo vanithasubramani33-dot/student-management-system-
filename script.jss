@@ -2,15 +2,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const studentForm = document.getElementById('studentForm');
     const studentTableBody = document.getElementById('studentTableBody');
 
-    // 1. Browser-oda local storage database-la irundhu data-va edukurom
+    // 1. Browser-oda internal database-la irundhu data-va load seiyuroom
     let students = JSON.parse(localStorage.getItem('students')) || [];
 
-    // 2. Data-va table-la render (display) panna koodiya function
+    // 2. Data-va dynamic-a table row-la display seiyum function
     function renderTable() {
         studentTableBody.innerHTML = '';
 
         if (students.length === 0) {
-            studentTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No records found.</td></tr>`;
+            studentTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888; padding: 20px;">No student records found. Add a student above!</td></tr>`;
             return;
         }
 
@@ -27,34 +27,37 @@ document.addEventListener('DOMContentLoaded', () => {
             studentTableBody.appendChild(row);
         });
 
-        // Delete button-ukku click functionality tharugirom
+        // Delete button click panna row-a remove pannum event listener
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', deleteStudent);
         });
     }
 
-    // 3. Form Submit aagumpodhu data-va database array-la pushed seiyum logic
-    studentForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // Default page refresh-a thadukum
+    // 3. Form submit (Add Student) aagumpodhu nadakiratha logic
+    if (studentForm) {
+        studentForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // Page reload aaguradha thadukum
 
-        const newStudent = {
-            id: document.getElementById('studentId').value.trim(),
-            name: document.getElementById('studentName').value.trim(),
-            email: document.getElementById('studentEmail').value.trim(),
-            course: document.getElementById('studentCourse').value.trim(),
-            phone: document.getElementById('studentPhone').value.trim()
-        };
+            // Text inputs-la irundhu values-a read pannuthu
+            const newStudent = {
+                id: document.getElementById('studentId').value.trim(),
+                name: document.getElementById('studentName').value.trim(),
+                email: document.getElementById('studentEmail').value.trim(),
+                course: document.getElementById('studentCourse').value.trim(),
+                phone: document.getElementById('studentPhone').value.trim()
+            };
 
-        // Data-va array-la push panni local storage database-la sync seiyuroom
-        students.push(newStudent);
-        localStorage.setItem('students', JSON.stringify(students));
+            // Database array-il push seithu save pannugiroom
+            students.push(newStudent);
+            localStorage.setItem('students', JSON.stringify(students));
 
-        // Table-a refresh panni form-a reset pannuvom
-        renderTable();
-        studentForm.reset();
-    });
+            // Table refresh and form input fields clear loop
+            renderTable();
+            studentForm.reset();
+        });
+    }
 
-    // 4. Record-ai delete seiyum function
+    // 4. Student record-a list-la irundhu delete pannum logic
     function deleteStudent(e) {
         const targetIndex = e.target.getAttribute('data-index');
         students.splice(targetIndex, 1);
@@ -62,6 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable();
     }
 
-    // Page open aagumpodhu renderTable call aagum
+    // Page startup-il table data-va load panna call
     renderTable();
 });
