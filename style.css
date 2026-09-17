@@ -42,7 +42,7 @@ input:focus {
     box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
 }
 
-button {
+button#addBtn {
     background-color: #4a4a4a;
     color: white;
     border: none;
@@ -52,17 +52,15 @@ button {
     font-size: 14px;
     font-weight: bold;
     margin-bottom: 25px;
+    display: inline-block;
 }
 
-button:hover {
+button#addBtn:hover {
     background-color: #333333;
 }
 
-.search-container {
-    margin-bottom: 25px;
-}
-
 h2 {
+    margin-top: 10px;
     margin-bottom: 15px;
     font-size: 24px;
     color: #333;
@@ -97,8 +95,11 @@ tr:hover {
 
 .delete-btn {
     background-color: #dc3545;
-    margin-bottom: 0;
+    color: white;
+    border: none;
     padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .delete-btn:hover {
