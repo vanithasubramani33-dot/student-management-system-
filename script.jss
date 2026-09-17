@@ -1,21 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
     const studentForm = document.getElementById('studentForm');
     const studentTableBody = document.getElementById('studentTableBody');
-    const searchName = document.getElementById('searchName');
 
-    // 1. Load students from localStorage database when page opens
+    // 1. Browser-oda local storage database-la irundhu data-va edukurom
     let students = JSON.parse(localStorage.getItem('students')) || [];
 
-    // 2. Function to render the student list inside the table
-    function renderTable(filteredStudents = students) {
+    // 2. Data-va table-la render (display) panna koodiya function
+    function renderTable() {
         studentTableBody.innerHTML = '';
 
-        if (filteredStudents.length === 0) {
-            studentTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No student records found.</td></tr>`;
+        if (students.length === 0) {
+            studentTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No records found.</td></tr>`;
             return;
         }
 
-        filteredStudents.forEach((student, index) => {
+        students.forEach((student, index) => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${student.id}</td>
@@ -28,15 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
             studentTableBody.appendChild(row);
         });
 
-        // Attach event listeners to all newly created delete buttons
+        // Delete button-ukku click functionality tharugirom
         document.querySelectorAll('.delete-btn').forEach(button => {
             button.addEventListener('click', deleteStudent);
         });
     }
 
-    // 3. Function to add a student to the database array
+    // 3. Form Submit aagumpodhu data-va database array-la pushed seiyum logic
     studentForm.addEventListener('submit', (e) => {
-        e.preventDefault(); // Stop page refresh
+        e.preventDefault(); // Default page refresh-a thadukum
 
         const newStudent = {
             id: document.getElementById('studentId').value.trim(),
@@ -46,40 +45,23 @@ document.addEventListener('DOMContentLoaded', () => {
             phone: document.getElementById('studentPhone').value.trim()
         };
 
-        // Save into our records array
+        // Data-va array-la push panni local storage database-la sync seiyuroom
         students.push(newStudent);
-
-        // Sync with browser database storage
         localStorage.setItem('students', JSON.stringify(students));
 
-        // Re-render table and clear form fields
+        // Table-a refresh panni form-a reset pannuvom
         renderTable();
         studentForm.reset();
     });
 
-    // 4. Function to delete a student row
+    // 4. Record-ai delete seiyum function
     function deleteStudent(e) {
         const targetIndex = e.target.getAttribute('data-index');
-        
-        // Remove from memory array
         students.splice(targetIndex, 1);
-        
-        // Sync update back to browser database storage
         localStorage.setItem('students', JSON.stringify(students));
-        
-        // Refresh table view
         renderTable();
     }
 
-    // 5. Real-time Search functionality
-    searchName.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filtered = students.filter(student => 
-            student.name.toLowerCase().includes(searchTerm)
-        );
-        renderTable(filtered);
-    });
-
-    // Initial render call on page startup
+    // Page open aagumpodhu renderTable call aagum
     renderTable();
 });
