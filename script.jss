@@ -1,108 +1,85 @@
-let students = JSON.parse(localStorage.getItem("students")) || [];
+document.addEventListener('DOMContentLoaded', () => {
+    const studentForm = document.getElementById('studentForm');
+    const studentTableBody = document.getElementById('studentTableBody');
+    const searchName = document.getElementById('searchName');
 
-function addStudent() {
+    // 1. Load students from localStorage database when page opens
+    let students = JSON.parse(localStorage.getItem('students')) || [];
 
-    let id = document.getElementById("studentId").value;
-    let name = document.getElementById("studentName").value;
-    let email = document.getElementById("studentEmail").value;
-    let course = document.getElementById("studentCourse").value;
-    let phone = document.getElementById("studentPhone").value;
+    // 2. Function to render the student list inside the table
+    function renderTable(filteredStudents = students) {
+        studentTableBody.innerHTML = '';
 
-    if (id === "" || name === "" || email === "" ||
-        course === "" || phone === "") {
+        if (filteredStudents.length === 0) {
+            studentTableBody.innerHTML = `<tr><td colspan="6" style="text-align:center; color:#888;">No student records found.</td></tr>`;
+            return;
+        }
 
-        alert("Please fill all fields");
-        return;
-    }
-
-    let student = {
-        id: id,
-        name: name,
-        email: email,
-        course: course,
-        phone: phone
-    };
-
-    students.push(student);
-
-    localStorage.setItem("students", JSON.stringify(students));
-
-    clearForm();
-    displayStudents();
-
-    alert("Student added successfully!");
-}
-
-
-function displayStudents() {
-
-    let table = document.getElementById("studentTable");
-
-    table.innerHTML = "";
-
-    students.forEach(function(student, index) {
-
-        table.innerHTML += `
-            <tr>
+        filteredStudents.forEach((student, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
                 <td>${student.id}</td>
                 <td>${student.name}</td>
                 <td>${student.email}</td>
                 <td>${student.course}</td>
                 <td>${student.phone}</td>
-                <td>
-                    <button class="delete"
-                    onclick="deleteStudent(${index})">
-                    Delete
-                    </button>
-                </td>
-            </tr>
-        `;
-    });
-}
+                <td><button class="delete-btn" data-index="${index}">Delete</button></td>
+            `;
+            studentTableBody.appendChild(row);
+        });
 
-
-function deleteStudent(index) {
-
-    students.splice(index, 1);
-
-    localStorage.setItem("students", JSON.stringify(students));
-
-    displayStudents();
-}
-
-
-function clearForm() {
-
-    document.getElementById("studentId").value = "";
-    document.getElementById("studentName").value = "";
-    document.getElementById("studentEmail").value = "";
-    document.getElementById("studentCourse").value = "";
-    document.getElementById("studentPhone").value = "";
-}
-
-
-function searchStudent() {
-
-    let search = document
-        .getElementById("searchInput")
-        .value
-        .toLowerCase();
-
-    let rows = document
-        .getElementById("studentTable")
-        .getElementsByTagName("tr");
-
-    for (let i = 0; i < rows.length; i++) {
-
-        let text = rows[i].innerText.toLowerCase();
-
-        if (text.includes(search)) {
-            rows[i].style.display = "";
-        } else {
-            rows[i].style.display = "none";
-        }
+        // Attach event listeners to all newly created delete buttons
+        document.querySelectorAll('.delete-btn').forEach(button => {
+            button.addEventListener('click', deleteStudent);
+        });
     }
-}
 
+    // 3. Function to add a student to the database array
+    studentForm.addEventListener('submit', (e) => {
+        e.preventDefault(); // Stop page refresh
 
-displayStudents();
+        const newStudent = {
+            id: document.getElementById('studentId').value.trim(),
+            name: document.getElementById('studentName').value.trim(),
+            email: document.getElementById('studentEmail').value.trim(),
+            course: document.getElementById('studentCourse').value.trim(),
+            phone: document.getElementById('studentPhone').value.trim()
+        };
+
+        // Save into our records array
+        students.push(newStudent);
+
+        // Sync with browser database storage
+        localStorage.setItem('students', JSON.stringify(students));
+
+        // Re-render table and clear form fields
+        renderTable();
+        studentForm.reset();
+    });
+
+    // 4. Function to delete a student row
+    function deleteStudent(e) {
+        const targetIndex = e.target.getAttribute('data-index');
+        
+        // Remove from memory array
+        students.splice(targetIndex, 1);
+        
+        // Sync update back to browser database storage
+        localStorage.setItem('students', JSON.stringify(students));
+        
+        // Refresh table view
+        renderTable();
+    }
+
+    // 5. Real-time Search functionality
+    searchName.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filtered = students.filter(student => 
+            student.name.toLowerCase().includes(searchTerm)
+        );
+        renderTable(filtered);
+    });
+
+    // Initial render call on page startup
+    renderTable();
+});
