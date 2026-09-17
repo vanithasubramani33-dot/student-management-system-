@@ -1,136 +1,67 @@
-let students = [];
-
-function addStudent() {
-
-    let id = document.getElementById("studentId").value;
-    let name = document.getElementById("name").value;
-    let email = document.getElementById("email").value;
-    let course = document.getElementById("course").value;
-    let phone = document.getElementById("phone").value;
-
-    if (id == "" || name == "" || email == "" || course == "" || phone == "") {
-        alert("Please fill all fields");
-        return;
-    }
-
-    let student = {
-        id: id,
-        name: name,
-        email: email,
-        course: course,
-        phone: phone
-    };
-
-    students.push(student);
-
-    displayStudents();
-
-    clearForm();
-
-    alert("Student added successfully");
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    margin: 0;
+    padding: 20px;
 }
 
-
-function displayStudents() {
-
-    let table = document.getElementById("studentTable");
-
-    table.innerHTML = "";
-
-    for (let i = 0; i < students.length; i++) {
-
-        let row = `
-            <tr>
-
-                <td>${students[i].id}</td>
-
-                <td>${students[i].name}</td>
-
-                <td>${students[i].email}</td>
-
-                <td>${students[i].course}</td>
-
-                <td>${students[i].phone}</td>
-
-                <td>
-
-                    <button class="edit" onclick="editStudent(${i})">
-                        Edit
-                    </button>
-
-                    <button class="delete" onclick="deleteStudent(${i})">
-                        Delete
-                    </button>
-
-                </td>
-
-            </tr>
-        `;
-
-        table.innerHTML += row;
-    }
+h1 {
+    text-align: center;
 }
 
-
-function deleteStudent(index) {
-
-    if (confirm("Do you want to delete this student?")) {
-
-        students.splice(index, 1);
-
-        displayStudents();
-    }
+.container {
+    background: white;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 1000px;
+    border-radius: 10px;
 }
 
-
-function editStudent(index) {
-
-    document.getElementById("studentId").value = students[index].id;
-
-    document.getElementById("name").value = students[index].name;
-
-    document.getElementById("email").value = students[index].email;
-
-    document.getElementById("course").value = students[index].course;
-
-    document.getElementById("phone").value = students[index].phone;
-
-    students.splice(index, 1);
-
-    displayStudents();
+input {
+    width: 95%;
+    padding: 12px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-
-function searchStudent() {
-
-    let search = document.getElementById("search").value.toLowerCase();
-
-    let rows = document
-        .getElementById("studentTable")
-        .getElementsByTagName("tr");
-
-    for (let i = 0; i < rows.length; i++) {
-
-        let text = rows[i].innerText.toLowerCase();
-
-        if (text.includes(search)) {
-            rows[i].style.display = "";
-        } else {
-            rows[i].style.display = "none";
-        }
-    }
+button {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
+button:hover {
+    background: #555;
+}
 
-function clearForm() {
+.search {
+    max-width: 1000px;
+    margin: auto;
+}
 
-    document.getElementById("studentId").value = "";
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
 
-    document.getElementById("name").value = "";
+th {
+    background: #333;
+    color: white;
+}
 
-    document.getElementById("email").value = "";
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
 
-    document.getElementById("course").value = "";
-
-    document.getElementById("phone").value = "";
+.delete {
+    background: red;
+    padding: 7px 12px;
 }
