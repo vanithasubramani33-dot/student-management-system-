@@ -1,58 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Management System</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-    <h1>Student Management System</h1>
-
     <div class="container">
+        <!-- Student Form -->
+        <form id="studentForm">
+            <div class="form-group">
+                <input type="text" id="studentId" placeholder="ID" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="studentName" placeholder="Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="studentEmail" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="studentCourse" placeholder="Course" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" id="studentPhone" placeholder="Phone" required>
+            </div>
+            <button type="submit" id="addBtn">Add Student</button>
+        </form>
 
-        <h2>Add Student</h2>
+        <!-- Search Bar Feature -->
+        <div class="search-container">
+            <input type="text" id="searchName" placeholder="Search by name...">
+        </div>
 
-        <input type="number" id="studentId" placeholder="Student ID">
-        <input type="text" id="studentName" placeholder="Student Name">
-        <input type="email" id="studentEmail" placeholder="Email">
-        <input type="text" id="studentCourse" placeholder="Course">
-        <input type="text" id="studentPhone" placeholder="Phone">
-
-        <button onclick="addStudent()">Add Student</button>
-
-    </div>
-
-    <div class="search">
-        <input type="text" id="searchInput"
-               placeholder="Search student..."
-               onkeyup="searchStudent()">
-    </div>
-
-    <div class="container">
-
+        <!-- Student List Table -->
         <h2>Student List</h2>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Course</th>
-                    <th>Phone</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody id="studentTable">
-            </tbody>
-
-        </table>
-
+        <div class="table-responsive">
+            <table id="studentTable">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Course</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTableBody">
+                    <!-- Dynamic rows will be inserted here -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script src="script.js"></script>
-
 </body>
 </html>
